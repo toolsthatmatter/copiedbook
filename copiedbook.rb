@@ -19,14 +19,12 @@ CONSTANT = "..."
 variable = "..."
 
 
-
-
-
 # Our requires
 Dir.glob(current_path + '/lib/*.rb') {|file| require file}
 
 class MyClass
   include Helpers
+  include FBCalls
 
   def initialize(log_file)
     @log_file = log_file
@@ -51,45 +49,40 @@ class MyClass
 
   def main
     puts(" ---- STARTING ----\n\n")
-
-
-
     
     # Connect to Facebook and get the feed with all posts
     require 'koala'
     @graph = Koala::Facebook::API.new(@token)
-    output = []
-    #### TODO: rescue from errors
-    feed = @graph.get_connections(@fanpage_id, "feed")
+    @output = []
+
+    feed = get_feed
+
     counter = 1
     until feed == nil
-      output += feed
+      @output += feed
       puts "We are in page #{counter} of the fanpage's feed"
       counter += 1
-      #### TODO: rescue from errors
-      feed = feed.next_page
+      feed = get_next_page(feed)
     end
     
     
     # Iterate through the feed to get all comments
-    output.each_with_index do |post, index|
+    @output.each_with_index do |post, index|
       if post["comments"]["count"] > 0
         puts "  The post #{post["id"]} has #{post["comments"]["count"]} comments. We are going to retrieve them now."
         comments = []
-        #### TODO: rescue from errors
-        comment_feed = @graph.get_connections(post["id"], "comments")
+        comment_feed = get_comment_feed(post)
         until comment_feed == nil
           comments += comment_feed
-          #### TODO: rescue from errors
-          comment_feed = comment_feed.next_page
+          comment_feed = get_next_page(comment_feed)
         end
         post["comments"] = comments
-        output[index] = post
+        @output[index] = post
       end
     end
 
     # Write the file
-    File.open(@output_file, 'w') {|f| f.write(output.to_json) }
+    File.open(@output_file, 'w') {|f| f.write(@output.to_json) }
 
     puts("\n\n ---- ENDING ----\n")
     clean_the_log 
@@ -98,6 +91,7 @@ class MyClass
 
   def run_it
     if ARGV.size == 3
+      ARGV.clear
       main
     else
       case ARGV[0]
