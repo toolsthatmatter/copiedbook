@@ -66,7 +66,6 @@ module Copiedbook
       File.open(@output_file, 'w') {|f| f.write(@output.to_json) }
 
       puts("\n\n ---- ENDING ----\n")
-      clean_the_log
       exit(0)
     end
 

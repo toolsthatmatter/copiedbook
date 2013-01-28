@@ -19,11 +19,8 @@ require 'copiedbook'
 # Configuration
 # Config variables
 debug = false # Set to true to get some debug information
-current_path = File.expand_path(File.dirname(__FILE__) + '/../')
 $log_limit = 10 # How many log files to store on log path
-$log_path = current_path + "/log"
-log_file = $log_path + "/main-" +
-  DateTime.now.strftime("%Y%m%d-%H%M%S") + ".log"
+log_file = "main-" + DateTime.now.strftime("%Y%m%d-%H%M%S") + ".log"
 log_file = Logger.new(log_file)
 CONSTANT = "..."
 variable = "..."
