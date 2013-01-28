@@ -18,4 +18,5 @@ _yardoc
 doc/
 *.json
 log/*.log
+*.log
 *.sublime-*
