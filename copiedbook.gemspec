@@ -10,7 +10,7 @@ Gem::Specification.new do |gem|
   gem.email         = ["info@tridoco.com"]
   gem.description   = %q{Take a offline copy of a facebook fan page.}
   gem.summary       = %q{Take a offline copy of a facebook fan page.}
-  gem.homepage      = "www.tridoco.com"
+  gem.homepage      = "http://www.tridoco.com"
 
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
