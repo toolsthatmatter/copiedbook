@@ -1,0 +1,14 @@
+PATH
+  remote: .
+  specs:
+    copiedbook (0.0.3)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  copiedbook!
