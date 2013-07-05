@@ -29,31 +29,33 @@ module Copiedbook
     end
 
     def main
-      puts(" ---- STARTING ----\n\n")
+      puts("\n ---- STARTING COPIEDBOOK, GETTING POSTS ----\n\n")
 
       # Connect to Facebook and get the feed with all posts
       require 'koala'
       @graph = Koala::Facebook::API.new(@token)
       @output = []
-
       feed = get_feed
-
+      
+      # Iterate through the feed to get all posts
       counter = 1
       until feed == nil
         @output += feed
-        puts "We are in page #{counter} of the fanpage's feed"
+        puts "  We are in page #{counter} of the fanpage's feed"
         counter += 1
         feed = get_next_page(feed)
       end
 
-
-      # Iterate through the feed to get all comments
+      # Iterate through the posts to get all comments
+      puts "\n\n ---- COPIEDBOOK HAS FINISHED WITH POSTS, NOW GOING FOR COMMENTS ---- \n\n"
       @output.each_with_index do |post, index|
-        if post["comments"]["count"] > 0
-          puts "  The post #{post["id"]} has #{post["comments"]["count"]} comments. We are going to retrieve them now."
+        if post["comments"]
           comments = []
           comment_feed = get_comment_feed(post)
+          counter = 1
           until comment_feed == nil
+            puts "  Retrieving comments from post #{post["id"]} #{'(page '+counter.to_s + ')' if counter > 1}"
+            counter += 1
             comments += comment_feed
             comment_feed = get_next_page(comment_feed)
           end
@@ -65,7 +67,7 @@ module Copiedbook
       # Write the file
       File.open(@output_file, 'w') {|f| f.write(@output.to_json) }
 
-      puts("\n\n ---- ENDING ----\n")
+      puts("\n\n ---- COPIEDBOOK HAS FINISHED ----\n")
       exit(0)
     end
 
